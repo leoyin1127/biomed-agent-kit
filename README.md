@@ -6,11 +6,16 @@ A collection of Claude Code skills for biomedical and healthcare ML research. Ea
 
 | Skill | Purpose |
 |-------|---------|
-| [project-scaffold](.claude/skills/project-scaffold/) | Bootstrap new research repos with uv, CLAUDE.md, and standard layout |
-| [experiment](.claude/skills/experiment/) | Experiment grids, GPU management, data splitting |
-| [evaluation](.claude/skills/evaluation/) | Classification, segmentation, and survival metrics with confidence intervals |
-| [reporting](.claude/skills/reporting/) | Publication-quality figures and markdown reports |
-| [repo-integration](.claude/skills/repo-integration/) | Integrate published GitHub repos and pretrained models into your project |
+| [project-scaffold](.claude/skills/project-scaffold/) | Bootstrap new research repos with uv, CLAUDE.md, pre-commit, and standard layout |
+| [data-preprocessing](.claude/skills/data-preprocessing/) | Load and preprocess DICOM, NIfTI, WSI, and tabular clinical data |
+| [training](.claude/skills/training/) | Training loops, transfer learning, mixed precision, checkpointing |
+| [experiment](.claude/skills/experiment/) | Experiment grids, GPU management, data splitting, hyperparameter tuning |
+| [evaluation](.claude/skills/evaluation/) | Classification, segmentation, survival, calibration, and regression metrics |
+| [reporting](.claude/skills/reporting/) | Publication-quality figures, ROC/PR curves, LaTeX tables, and markdown reports |
+| [deployment](.claude/skills/deployment/) | Model export (ONNX), inference pipelines, sliding window, TTA, serving |
+| [repo-integration](.claude/skills/repo-integration/) | Integrate GitHub repos, HuggingFace models, and MONAI into your project |
+| [clinical-nlp](.claude/skills/clinical-nlp/) | Biomedical NLP with clinical notes, radiology reports, and PubMed text |
+| [paper-research](.claude/skills/paper-research/) | Research papers across PubMed, Semantic Scholar, arXiv, focusing on top venues |
 
 ## Setup
 
@@ -76,6 +81,56 @@ Skills trigger automatically based on what you ask Claude.
 "Wrap this external segmentation model so it accepts our DICOM inputs"
 "This repo requires torch 1.x but we use torch 2 — help me integrate it"
 "Set up the pretrained weights from this paper's Google Drive link"
+```
+
+### data-preprocessing
+
+```
+"Load DICOM files from this directory and convert to numpy arrays"
+"Set up CT windowing for soft tissue and normalize to [0,1]"
+"Build a PyTorch Dataset class for our whole-slide images with tile extraction"
+"Apply stain normalization to our histopathology patches"
+"Create a cached HDF5-backed dataset for this large imaging study"
+```
+
+### training
+
+```
+"Write a training loop with early stopping and cosine LR scheduling"
+"Fine-tune this pretrained ResNet on our pathology dataset"
+"Set up mixed precision training with gradient accumulation"
+"Add checkpoint saving that keeps the best model by validation AUC"
+"Implement progressive unfreezing for transfer learning"
+```
+
+### deployment
+
+```
+"Export our trained model to ONNX format"
+"Build a sliding window inference pipeline for our 3D CT volumes"
+"Add test-time augmentation to our prediction pipeline"
+"Create a FastAPI endpoint for model inference"
+"Package our model in a Docker container for deployment"
+```
+
+### clinical-nlp
+
+```
+"Extract medical entities from these radiology reports using scispaCy"
+"Fine-tune PubMedBERT for classifying clinical notes"
+"Set up a text classification pipeline for ICD code prediction"
+"Extract embeddings from clinical notes using ClinicalBERT"
+"Build a few-shot classifier for pathology report categorization"
+```
+
+### paper-research
+
+```
+"Find state-of-the-art methods for cell segmentation in histopathology"
+"Search for papers on survival prediction from MICCAI and Nature Medicine"
+"Create a literature comparison table for federated learning in medical imaging"
+"Find which papers have public code for chest X-ray classification"
+"Summarize recent advances in foundation models for pathology"
 ```
 
 ## License
