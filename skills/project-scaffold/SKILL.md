@@ -13,12 +13,13 @@ description: >
 
 ```bash
 python scripts/init_project.py my-study --path /path/to/workspace --python-version 3.11
+python scripts/init_project.py my-study --path /path/to/workspace --python-version 3.11 --docker --dependency monai
 cd my-study && uv sync && uv run pytest tests/
 ```
 
 Creates a uv-managed Python project with: `src/<pkg>/config.py` for
-paths/settings, `tests/`, `docs/`, `CLAUDE.md`, pre-commit hooks (ruff),
-and standard biomedical ML dependencies.
+paths/settings, `tests/`, a dated `docs/<YYYYMMDD>/` directory, `CLAUDE.md`,
+pre-commit hooks, ruff config, and standard biomedical ML dependencies.
 
 ## What Gets Created
 
@@ -31,6 +32,8 @@ my-study/
 ├── .gitignore
 ├── CLAUDE.md               # Agent guidance
 ├── README.md
+├── Dockerfile              # Optional, if --docker is passed
+├── .dockerignore           # Optional, if --docker is passed
 ├── src/<pkg>/
 │   ├── __init__.py
 │   └── config.py           # Paths and project settings (env var overrides)
@@ -57,4 +60,4 @@ my-study/
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/init_project.py` | Scaffold a minimal new project (supports `--python-version` flag) |
+| `scripts/init_project.py` | Scaffold a minimal new project (supports `--python-version`, `--docker`, and repeatable `--dependency` flags) |

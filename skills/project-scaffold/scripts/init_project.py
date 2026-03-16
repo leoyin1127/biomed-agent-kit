@@ -12,6 +12,32 @@ import argparse
 import os
 import sys
 import textwrap
+from datetime import date
+
+
+DEFAULT_DEPENDENCIES = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "scipy>=1.10",
+    "tqdm>=4.60",
+    "matplotlib>=3.7",
+    "python-dotenv",
+    "wandb>=0.15",
+]
+
+DEFAULT_DEV_DEPENDENCIES = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "pre-commit",
+    "ruff>=0.8",
+]
+
+RUFF_TARGETS = {
+    "3.10": "py310",
+    "3.11": "py311",
+    "3.12": "py312",
+}
 
 
 def write(path: str, content: str) -> None:
@@ -20,33 +46,54 @@ def write(path: str, content: str) -> None:
         f.write(textwrap.dedent(content).lstrip("\n"))
 
 
-def init_project(name: str, parent: str, python_version: str = "3.10") -> str:
+def format_toml_list(items: list[str], indent: int = 12) -> str:
+    padding = " " * indent
+    return "\n".join(f'{padding}"{item}",' for item in items)
+
+
+def init_project(
+    name: str,
+    parent: str,
+    python_version: str = "3.10",
+    docker: bool = False,
+    extra_dependencies: list[str] | None = None,
+) -> str:
     root = os.path.join(parent, name)
     if os.path.exists(root):
         print(f"Error: {root} already exists", file=sys.stderr)
         sys.exit(1)
 
     pkg = name.replace("-", "_")
+    docs_dir = date.today().strftime("%Y%m%d")
+    dependencies = DEFAULT_DEPENDENCIES + list(extra_dependencies or [])
+    dev_dependencies = DEFAULT_DEV_DEPENDENCIES
+    docker_files = ""
+
+    if docker:
+        docker_files = textwrap.dedent(f"""\
+
+            ## Docker
+
+            ```bash
+            docker build -t {name} .
+            docker run --rm {name} pytest tests/
+            ```
+        """)
 
     # ── pyproject.toml ──────────────────────────────────────────────
     write(f"{root}/pyproject.toml", f"""\
         [project]
         name = "{name}"
         version = "0.1.0"
-        requires-python = ">=3.10"
+        requires-python = ">={python_version}"
         dependencies = [
-            "numpy>=1.24",
-            "pandas>=2.0",
-            "scikit-learn>=1.3",
-            "scipy>=1.10",
-            "tqdm>=4.60",
-            "matplotlib>=3.7",
-            "python-dotenv",
-            "wandb>=0.15",
+{format_toml_list(dependencies)}
         ]
 
         [dependency-groups]
-        dev = ["pytest>=7.0", "pytest-cov", "pre-commit", "ruff>=0.8"]
+        dev = [
+{format_toml_list(dev_dependencies)}
+        ]
 
         [build-system]
         requires = ["hatchling"]
@@ -57,6 +104,14 @@ def init_project(name: str, parent: str, python_version: str = "3.10") -> str:
 
         [tool.pytest.ini_options]
         testpaths = ["tests"]
+
+        [tool.ruff]
+        line-length = 100
+        target-version = "{RUFF_TARGETS[python_version]}"
+
+        [tool.ruff.lint]
+        select = ["E", "F", "I", "UP", "B"]
+        ignore = ["E501"]
     """)
 
     # ── .python-version ─────────────────────────────────────────────
@@ -131,14 +186,13 @@ def init_project(name: str, parent: str, python_version: str = "3.10") -> str:
     """)
 
     # ── docs/ ───────────────────────────────────────────────────────
-    os.makedirs(f"{root}/docs", exist_ok=True)
-    write(f"{root}/docs/.gitkeep", "")
+    write(f"{root}/docs/{docs_dir}/.gitkeep", "")
 
     # ── CLAUDE.md ───────────────────────────────────────────────────
     write(f"{root}/CLAUDE.md", f"""\
         # CLAUDE.md
 
-        This file provides guidance to Claude Code when working with this repository.
+        This file provides guidance to the coding agent when working with this repository.
 
         ## Project Overview
 
@@ -200,7 +254,44 @@ def init_project(name: str, parent: str, python_version: str = "3.10") -> str:
         # Run tests
         uv run pytest tests/
         ```
+
+        ## Documentation
+
+        Save reports and figures under `docs/{docs_dir}/`.
+{docker_files}
     """)
+
+    if docker:
+        write(f"{root}/Dockerfile", f"""\
+            FROM python:{python_version}-slim
+
+            COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+            WORKDIR /app
+
+            COPY pyproject.toml README.md ./
+            COPY src/ src/
+            COPY scripts/ scripts/
+            RUN uv sync --no-dev
+
+            COPY tests/ tests/
+            COPY CLAUDE.md ./
+
+            ENTRYPOINT ["uv", "run"]
+            CMD ["pytest", "tests/"]
+        """)
+
+        write(f"{root}/.dockerignore", """\
+            .git
+            .venv
+            __pycache__/
+            *.pyc
+            .pytest_cache/
+            docs/
+            dist/
+            build/
+            .env
+        """)
 
     return root
 
@@ -212,14 +303,26 @@ def main():
     parser.add_argument("--python-version", default="3.10",
                         choices=["3.10", "3.11", "3.12"],
                         help="Python version (default: 3.10)")
+    parser.add_argument("--docker", action="store_true",
+                        help="Add Dockerfile and .dockerignore for a reproducible container setup")
+    parser.add_argument("--dependency", action="append", default=[],
+                        help="Add an extra runtime dependency (repeatable)")
     args = parser.parse_args()
 
-    root = init_project(args.name, args.path, args.python_version)
+    root = init_project(
+        args.name,
+        args.path,
+        args.python_version,
+        docker=args.docker,
+        extra_dependencies=args.dependency,
+    )
     print(f"Project created at: {root}")
     print(f"\nNext steps:")
     print(f"  cd {root}")
     print(f"  uv sync")
     print(f"  uv run pytest tests/")
+    if args.docker:
+        print(f"  docker build -t {args.name} .")
 
 
 if __name__ == "__main__":

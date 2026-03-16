@@ -1,5 +1,16 @@
 # Project Structure Reference
 
+## Contents
+
+- Directory Layout
+- Package Management
+- Configuration Pattern
+- CLAUDE.md Template
+- Documentation Convention
+- Pre-Commit Configuration
+- Docker Support
+- Environment Variable Management
+
 Minimal directory layout for biomedical ML research projects.
 
 ## Directory Layout
@@ -12,6 +23,8 @@ project-name/
 ├── .gitignore
 ├── CLAUDE.md               # Coding agent instructions
 ├── README.md
+├── Dockerfile              # Optional, if container support is requested
+├── .dockerignore           # Optional, if container support is requested
 ├── src/<package>/
 │   ├── __init__.py
 │   └── config.py           # Paths and project settings
@@ -109,6 +122,8 @@ uv add --group dev pre-commit ruff
 uv run pre-commit install
 ```
 
+The scaffold script writes this ruff configuration directly, so the project is lint-ready after `uv sync`.
+
 ## Docker Support
 
 For reproducible environments (common in clinical ML):
@@ -119,13 +134,13 @@ FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
 WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 COPY pyproject.toml uv.lock ./
-RUN uv sync --no-dev --frozen
 COPY src/ src/
 COPY scripts/ scripts/
+RUN uv sync --no-dev --frozen
 ENTRYPOINT ["uv", "run"]
 ```
 
-**ASK the user** whether they need Docker support -- it adds complexity but is essential for reproducibility in clinical settings and shared compute.
+If the user asks for containerization up front, scaffold `Dockerfile` and `.dockerignore` immediately; otherwise keep the project lean and add them later only when needed.
 
 ## Environment Variable Management
 
