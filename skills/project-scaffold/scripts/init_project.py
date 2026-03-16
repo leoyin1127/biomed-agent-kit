@@ -20,7 +20,7 @@ def write(path: str, content: str) -> None:
         f.write(textwrap.dedent(content).lstrip("\n"))
 
 
-def init_project(name: str, parent: str) -> str:
+def init_project(name: str, parent: str, python_version: str = "3.10") -> str:
     root = os.path.join(parent, name)
     if os.path.exists(root):
         print(f"Error: {root} already exists", file=sys.stderr)
@@ -46,7 +46,7 @@ def init_project(name: str, parent: str) -> str:
         ]
 
         [dependency-groups]
-        dev = ["pytest>=7.0", "pytest-cov"]
+        dev = ["pytest>=7.0", "pytest-cov", "pre-commit", "ruff>=0.8"]
 
         [build-system]
         requires = ["hatchling"]
@@ -60,7 +60,7 @@ def init_project(name: str, parent: str) -> str:
     """)
 
     # ── .python-version ─────────────────────────────────────────────
-    write(f"{root}/.python-version", "3.10\n")
+    write(f"{root}/.python-version", f"{python_version}\n")
 
     # ── .gitignore ──────────────────────────────────────────────────
     write(f"{root}/.gitignore", """\
@@ -79,6 +79,17 @@ def init_project(name: str, parent: str) -> str:
     write(f"{root}/.env.example", """\
         # Copy to .env and fill in values
         # WANDB_API_KEY=xxx
+    """)
+
+    # ── .pre-commit-config.yaml ──────────────────────────────────
+    write(f"{root}/.pre-commit-config.yaml", """\
+        repos:
+          - repo: https://github.com/astral-sh/ruff-pre-commit
+            rev: v0.8.0
+            hooks:
+              - id: ruff
+                args: [--fix]
+              - id: ruff-format
     """)
 
     # ── src/<pkg>/__init__.py ───────────────────────────────────────
@@ -198,9 +209,12 @@ def main():
     parser = argparse.ArgumentParser(description="Bootstrap a biomedical ML research project")
     parser.add_argument("name", help="Project name (e.g., my-study)")
     parser.add_argument("--path", default=".", help="Parent directory (default: current dir)")
+    parser.add_argument("--python-version", default="3.10",
+                        choices=["3.10", "3.11", "3.12"],
+                        help="Python version (default: 3.10)")
     args = parser.parse_args()
 
-    root = init_project(args.name, args.path)
+    root = init_project(args.name, args.path, args.python_version)
     print(f"Project created at: {root}")
     print(f"\nNext steps:")
     print(f"  cd {root}")

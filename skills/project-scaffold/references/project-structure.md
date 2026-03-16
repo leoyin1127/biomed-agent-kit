@@ -74,3 +74,66 @@ docs/
     ├── follow_up.md
     └── fig_comparison.png
 ```
+
+## Pre-Commit Configuration
+
+Set up code quality tooling with ruff (linting + formatting):
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+```
+
+Add ruff configuration to `pyproject.toml`:
+
+```toml
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]  # line length handled by formatter
+```
+
+Install:
+
+```bash
+uv add --group dev pre-commit ruff
+uv run pre-commit install
+```
+
+## Docker Support
+
+For reproducible environments (common in clinical ML):
+
+```dockerfile
+# Dockerfile
+FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+WORKDIR /app
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY pyproject.toml uv.lock ./
+RUN uv sync --no-dev --frozen
+COPY src/ src/
+COPY scripts/ scripts/
+ENTRYPOINT ["uv", "run"]
+```
+
+**ASK the user** whether they need Docker support -- it adds complexity but is essential for reproducibility in clinical settings and shared compute.
+
+## Environment Variable Management
+
+Use `python-dotenv` for local development:
+
+```python
+from dotenv import load_dotenv
+load_dotenv()  # loads from .env file
+```
+
+The `.env.example` file documents all expected variables. Never commit `.env` itself.

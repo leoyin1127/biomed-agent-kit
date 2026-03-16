@@ -27,34 +27,32 @@ def generate_experiments(dimensions: dict[str, list], train_cfg):
 Use a JSON file with file locking to track completed experiments:
 
 ```python
-import fcntl, json, os
+import json
+import os
+
+from filelock import FileLock  # pip install filelock (cross-platform)
 
 def load_completed(output_dir: str) -> set[str]:
     path = os.path.join(output_dir, "results", "_completed.json")
+    lock_path = path + ".lock"
     if not os.path.exists(path):
         return set()
-    with open(path) as f:
-        fcntl.flock(f, fcntl.LOCK_SH)
-        try:
+    with FileLock(lock_path):
+        with open(path) as f:
             return set(json.load(f))
-        finally:
-            fcntl.flock(f, fcntl.LOCK_UN)
 
 def mark_completed(output_dir: str, experiment_id: str) -> None:
     path = os.path.join(output_dir, "results", "_completed.json")
+    lock_path = path + ".lock"
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "a+") as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
-        try:
-            f.seek(0)
-            content = f.read().strip()
-            completed = set(json.loads(content)) if content else set()
-            completed.add(experiment_id)
-            f.seek(0)
-            f.truncate()
-            f.write(json.dumps(sorted(completed), indent=2))
-        finally:
-            fcntl.flock(f, fcntl.LOCK_UN)
+    with FileLock(lock_path):
+        completed = set()
+        if os.path.exists(path):
+            with open(path) as f:
+                completed = set(json.load(f))
+        completed.add(experiment_id)
+        with open(path, "w") as f:
+            json.dump(sorted(completed), f, indent=2)
 ```
 
 ## Cross-Validation Split Generation
@@ -93,7 +91,9 @@ def aggregate_results(summaries: list[dict], dim_keys: list[str]) -> pd.DataFram
     return pd.DataFrame(rows)
 ```
 
-## Experiment Tracking with Wandb
+## Experiment Tracking
+
+### Wandb
 
 Use wandb for experiment logging and metric visualization:
 
@@ -111,17 +111,51 @@ wandb.log({"epoch": epoch, "train_loss": loss, "val_metric": val_score})
 wandb.finish()
 ```
 
-## Per-Experiment Logging (Multi-GPU)
+### MLflow
 
-Redirect stdout/stderr per experiment to avoid interleaved output:
+Use MLflow when data must stay on-premises (common in clinical/regulated settings):
 
 ```python
-import sys
+import mlflow
 
-log_path = os.path.join(output_dir, "logs", f"{experiment_id}.log")
-os.makedirs(os.path.dirname(log_path), exist_ok=True)
-sys.stdout = open(log_path, "w")
-sys.stderr = sys.stdout
+mlflow.set_tracking_uri("sqlite:///mlruns.db")  # or a remote server
+mlflow.set_experiment("my-experiment")
+
+with mlflow.start_run(run_name=run_name):
+    mlflow.log_params(experiment_config.to_dict())
+    mlflow.log_metrics({"val_auc": val_score, "val_loss": val_loss}, step=epoch)
+    mlflow.log_artifact(model_path)
+```
+
+**ASK the user** which tracking tool they prefer -- wandb (cloud-hosted, richer UI) or MLflow (self-hosted, better for regulated environments where data cannot leave the organization).
+
+## Per-Experiment Logging (Multi-GPU)
+
+Use Python's logging module instead of redirecting stdout:
+
+```python
+import logging
+import os
+
+def setup_experiment_logger(output_dir: str, experiment_id: str) -> logging.Logger:
+    """Create a per-experiment logger that writes to a dedicated log file."""
+    log_path = os.path.join(output_dir, "logs", f"{experiment_id}.log")
+    os.makedirs(os.path.dirname(log_path), exist_ok=True)
+
+    logger = logging.getLogger(experiment_id)
+    logger.setLevel(logging.INFO)
+    logger.handlers.clear()
+
+    fh = logging.FileHandler(log_path)
+    fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+    logger.addHandler(fh)
+
+    return logger
+
+# Usage in worker process
+logger = setup_experiment_logger(output_dir, experiment_id)
+logger.info(f"Starting experiment {experiment_id}")
+logger.info(f"Epoch {epoch}: train_loss={loss:.4f}, val_auc={val_auc:.4f}")
 ```
 
 ## Directory Structure for Results

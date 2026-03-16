@@ -67,11 +67,82 @@ def plot_forest(df, metric_prefix, label_cols, output_path):
 
 ### Radar/Spider Plots (Multi-Metric Comparison)
 
-Compare top configurations across multiple metrics simultaneously.
+Compare top configurations across multiple metrics simultaneously:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_radar(df, metric_cols, label_col, output_path,
+               title="Multi-Metric Comparison"):
+    """Radar/spider plot comparing configurations across multiple metrics.
+
+    df: DataFrame with one row per configuration
+    metric_cols: list of metric column names (values should be 0-1 scale)
+    label_col: column name for configuration labels
+    """
+    n_metrics = len(metric_cols)
+    angles = np.linspace(0, 2 * np.pi, n_metrics, endpoint=False).tolist()
+    angles += angles[:1]  # close the polygon
+
+    fig, ax = plt.subplots(figsize=(8, 8), dpi=150,
+                           subplot_kw=dict(polar=True))
+    for _, row in df.iterrows():
+        values = [row[col] for col in metric_cols]
+        values += values[:1]
+        ax.plot(angles, values, "o-", linewidth=2, label=row[label_col])
+        ax.fill(angles, values, alpha=0.1)
+
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels([c.replace("_", " ").title() for c in metric_cols],
+                       fontsize=9)
+    ax.set_ylim(0, 1)
+    ax.set_title(title, fontsize=14, pad=20)
+    ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1), fontsize=8)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+```
 
 ### Sensitivity vs Specificity Scatter
 
-Each point is one experiment; shows trade-off between clinical metrics.
+Each point is one experiment; shows trade-off between clinical metrics:
+
+```python
+import matplotlib.pyplot as plt
+
+def plot_sens_spec_scatter(df, sens_col, spec_col, label_col,
+                           output_path, group_col=None):
+    """Scatter plot of sensitivity vs specificity for each experiment.
+
+    Optionally color by a grouping column (e.g., model architecture).
+    """
+    fig, ax = plt.subplots(figsize=(8, 8), dpi=150)
+
+    if group_col:
+        for group in df[group_col].unique():
+            subset = df[df[group_col] == group]
+            ax.scatter(subset[spec_col], subset[sens_col], label=group,
+                       s=60, alpha=0.7)
+    else:
+        ax.scatter(df[spec_col], df[sens_col], s=60, alpha=0.7)
+
+    for _, row in df.iterrows():
+        ax.annotate(row[label_col], (row[spec_col], row[sens_col]),
+                    fontsize=7, textcoords="offset points", xytext=(5, 5))
+
+    ax.set_xlabel("Specificity", fontsize=12)
+    ax.set_ylabel("Sensitivity", fontsize=12)
+    ax.set_title("Sensitivity vs Specificity Trade-off", fontsize=14)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.plot([0, 1], [0, 1], "k--", alpha=0.3)
+    if group_col:
+        ax.legend()
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+```
 
 ## Dated Output Directory
 
