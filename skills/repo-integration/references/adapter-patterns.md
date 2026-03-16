@@ -1,5 +1,17 @@
 # Adapter Patterns
 
+## Contents
+
+- Core Adapter Class
+- Pattern 1: Feature Extractor
+- Pattern 2: Pretrained Classifier/Segmenter
+- Pattern 3: Preprocessing Pipeline
+- Pattern 4: Batch Processing with Memory Management
+- Checkpoint Loading Recipes
+- File Organization
+- Common Pitfalls
+
+
 Reusable patterns for wrapping external repos into your project's interface.
 
 ## Core Adapter Class

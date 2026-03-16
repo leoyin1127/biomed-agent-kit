@@ -1,5 +1,13 @@
 # Search Strategy Reference
 
+## Contents
+
+- Step 1: Define Search Scope
+- Step 2: Search Sources
+- Step 3: Filter by Quality
+- Step 4: Extract and Organize
+- Common Pitfalls
+
 ## Step 1: Define Search Scope
 
 Before searching, clarify with the user:
@@ -174,7 +182,7 @@ def search_arxiv(query: str, max_results: int = 50,
 
 ### Google Scholar
 
-Google Scholar doesn't have a free API. Use Semantic Scholar or PubMed as primary sources. For Google Scholar, use Claude Code's WebSearch tool with queries like `site:scholar.google.com {your query}`.
+Google Scholar doesn't have a free API. Use Semantic Scholar or PubMed as primary sources. For Google Scholar, use the agent's web-search tool with queries like `site:scholar.google.com {your query}`.
 
 ## Step 3: Filter by Quality
 

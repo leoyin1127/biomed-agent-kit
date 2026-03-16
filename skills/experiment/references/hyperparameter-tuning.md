@@ -1,5 +1,15 @@
 # Hyperparameter Tuning Patterns
 
+## Contents
+
+- Optuna Study Setup
+- Pruning (Early Termination of Bad Trials)
+- Multi-Objective Optimization
+- Search Space Guidelines
+- Integration with Cross-Validation
+- Common Pitfalls
+
+
 ## Optuna Study Setup
 
 ```python

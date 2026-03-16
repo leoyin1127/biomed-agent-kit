@@ -1,5 +1,16 @@
 # Evaluation Metrics Reference
 
+## Contents
+
+- Standard Classification Metrics
+- Confidence Intervals via Student's t-distribution
+- Multi-Class Extensions
+- Statistical Comparison Between Models
+- Publication-Quality Reporting
+- Bootstrap Confidence Intervals (Held-Out Test Sets)
+- Multi-Label Classification
+
+
 ## Standard Classification Metrics
 
 For binary classification in biomedical research:

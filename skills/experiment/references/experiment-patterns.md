@@ -1,5 +1,16 @@
 # Experiment Orchestration Patterns
 
+## Contents
+
+- Experiment Grid Generation
+- Resumable Completion Tracking
+- Cross-Validation Split Generation
+- Results Aggregation
+- Experiment Tracking
+- Per-Experiment Logging (Multi-GPU)
+- Directory Structure for Results
+
+
 ## Experiment Grid Generation
 
 Generate all combinations from experiment dimensions (e.g., tasks, feature sets, model architectures):

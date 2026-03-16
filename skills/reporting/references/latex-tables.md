@@ -49,7 +49,7 @@ def to_latex_results_table(df: pd.DataFrame, metric_prefixes: list[str],
 
 ```python
 def save_latex_table(latex: str, output_path: str):
-    """Write LaTeX table to .tex file for \input{} in papers."""
+    """Write LaTeX table to a .tex file for inclusion in papers."""
     with open(output_path, "w") as f:
         f.write(latex)
     # Also save standalone compilable file for preview

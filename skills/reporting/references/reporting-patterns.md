@@ -1,5 +1,17 @@
 # Scientific Reporting Patterns
 
+## Contents
+
+- Figure Types for Benchmarking
+- Dated Output Directory
+- Markdown Report Structure
+- Summary
+- Results
+- Figures
+- Conclusions
+- Figure Quality Guidelines
+
+
 ## Figure Types for Benchmarking
 
 ### Heatmaps (Dimension A x Dimension B Performance)

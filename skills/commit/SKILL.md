@@ -1,7 +1,8 @@
 ---
 name: commit
 description: "Smart granular commit workflow that groups changes into separate, logically-grouped commits by feature, functionality, or type. Never commits everything at once. No co-author line. Uses Conventional Commits. Use when user says commit, /commit, or commit my changes, or asks to save/checkpoint work, or at the end of a task when changes need to be committed."
-user-invokable: true
+metadata:
+  user-invokable: true
 ---
 
 # Smart Commit

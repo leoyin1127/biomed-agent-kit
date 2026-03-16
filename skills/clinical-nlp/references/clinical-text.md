@@ -1,5 +1,15 @@
 # Clinical Text Processing Reference
 
+## Contents
+
+- Preprocessing Clinical Notes
+- Medical NER with scispaCy
+- UMLS Concept Linking
+- Extracting Clinical Patterns
+- De-Identification Considerations
+- Common Pitfalls
+
+
 **ASK the user** whether their clinical text is de-identified. If it contains PHI, advise on de-identification before any processing.
 
 ## Preprocessing Clinical Notes

@@ -1,5 +1,15 @@
 # Mixed Precision Training Reference
 
+## Contents
+
+- Standard AMP Training (fp16)
+- bf16 Training (Ampere+ GPUs)
+- fp16 vs bf16 Comparison
+- Disabling AMP for Specific Operations
+- Checking GPU bf16 Support
+- Common Pitfalls
+
+
 **ASK the user** what GPU they have -- bf16 requires Ampere (A100, RTX 3090) or newer; older GPUs must use fp16.
 
 ## Standard AMP Training (fp16)

@@ -1,5 +1,13 @@
 # Medical Imaging I/O Reference
 
+## Contents
+
+- DICOM Loading (pydicom)
+- NIfTI Loading (nibabel)
+- Whole-Slide Image Loading (OpenSlide)
+- Common Pitfalls
+
+
 **ASK the user** which imaging modality they are working with before selecting a loading pattern.
 
 ## DICOM Loading (pydicom)

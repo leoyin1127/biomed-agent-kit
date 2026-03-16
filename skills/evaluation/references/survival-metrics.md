@@ -1,5 +1,18 @@
 # Survival Analysis Metrics Reference
 
+## Contents
+
+- Standard Survival Metrics
+- Concordance Index (C-index)
+- Kaplan-Meier Estimation
+- Cox Proportional Hazards
+- Time-Dependent AUC
+- Confidence Intervals for C-index
+- Cross-Validation for Survival Models
+- Publication-Quality Reporting
+- Common Pitfalls
+
+
 ## Standard Survival Metrics
 
 For time-to-event prediction in clinical/genomics research:

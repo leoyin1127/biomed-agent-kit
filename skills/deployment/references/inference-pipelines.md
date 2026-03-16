@@ -1,5 +1,15 @@
 # Inference Pipelines Reference
 
+## Contents
+
+- Sliding Window Inference (3D Volumes)
+- Patch-Based WSI Inference
+- Test-Time Augmentation (TTA)
+- Memory-Efficient Inference
+- Batch Inference CLI
+- Common Pitfalls
+
+
 **ASK the user** about their input data format and size -- sliding window is for 3D volumes, patch-based is for WSI, simple batching is for standard 2D images.
 
 ## Sliding Window Inference (3D Volumes)

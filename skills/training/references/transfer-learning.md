@@ -1,5 +1,16 @@
 # Transfer Learning Reference
 
+## Contents
+
+- Decision Guide
+- Freeze / Unfreeze Backbone
+- Progressive Unfreezing
+- Discriminative Learning Rates
+- Layer-Wise LR Decay
+- Loading Pretrained Weights
+- Common Pitfalls
+
+
 **ASK the user** about their dataset size relative to pretraining data -- this determines whether to freeze, fine-tune, or train from scratch.
 
 ## Decision Guide

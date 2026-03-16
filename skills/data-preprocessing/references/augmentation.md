@@ -1,5 +1,15 @@
 # Augmentation Reference
 
+## Contents
+
+- Spatial Augmentations
+- Intensity Augmentations
+- Domain-Specific Augmentations
+- 3D Augmentations
+- Framework Comparison
+- Key Rules
+
+
 **ASK the user** which augmentation framework they prefer (MONAI, albumentations, torchvision, or custom) and their data dimensionality (2D vs 3D) before writing augmentation code.
 
 ## Spatial Augmentations

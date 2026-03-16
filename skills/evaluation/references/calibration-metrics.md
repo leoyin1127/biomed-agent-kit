@@ -1,5 +1,15 @@
 # Calibration Metrics Reference
 
+## Contents
+
+- Expected Calibration Error (ECE)
+- Brier Score
+- Reliability Diagram
+- Temperature Scaling (Post-Hoc Calibration)
+- When to Assess Calibration
+- Common Pitfalls
+
+
 Model calibration measures whether predicted probabilities match observed frequencies.
 Critical for clinical decision-making where probability thresholds guide treatment.
 

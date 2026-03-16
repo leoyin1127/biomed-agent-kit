@@ -1,5 +1,15 @@
 # Segmentation Metrics Reference
 
+## Contents
+
+- Standard Segmentation Metrics
+- Core Metric Implementations
+- Multi-Class Segmentation
+- Confidence Intervals for Segmentation
+- Publication-Quality Reporting
+- Common Pitfalls
+
+
 ## Standard Segmentation Metrics
 
 For pixel/voxel-level segmentation in medical imaging:

@@ -1,5 +1,26 @@
 # Paper Analysis Patterns
 
+## Contents
+
+- Structured Paper Reading Template
+- Paper: {Title}
+- Literature Comparison Table
+- Literature Review Outline
+- 1. {Subtopic A} (e.g., "Traditional Approaches")
+- 2. {Subtopic B} (e.g., "Deep Learning Methods")
+- 3. {Subtopic C} (e.g., "Foundation Models")
+- 4. Gaps and Opportunities
+- Summary Table
+- Systematic Search Reporting
+- Research Question
+- Search Strategy
+- Inclusion Criteria
+- Exclusion Criteria
+- Results
+- Finding Code for Papers
+- Common Pitfalls
+
+
 ## Structured Paper Reading Template
 
 ```markdown

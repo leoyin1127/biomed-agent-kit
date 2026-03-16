@@ -1,5 +1,14 @@
 # Text Classification Reference
 
+## Contents
+
+- Fine-Tuning BERT for Classification
+- Multi-Label Classification
+- Label Extraction from Radiology Reports
+- Few-Shot Classification with LLMs
+- Common Pitfalls
+
+
 **ASK the user** about their label schema and dataset size -- small datasets (<500 samples) may benefit from few-shot LLM approaches rather than fine-tuning.
 
 ## Fine-Tuning BERT for Classification

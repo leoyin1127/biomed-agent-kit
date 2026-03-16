@@ -1,5 +1,16 @@
 # Data Splitting Patterns Reference
 
+## Contents
+
+- Patient-Level Splits (No Data Leakage)
+- Site/Institution-Aware Splits
+- Temporal Splits (Longitudinal Data)
+- Train/Validation Split from Training Fold
+- Class Imbalance Strategies
+- Validation Checklist
+- Common Pitfalls
+
+
 ## Patient-Level Splits (No Data Leakage)
 
 In biomedical data, a single patient often has multiple samples (slices, tiles, time

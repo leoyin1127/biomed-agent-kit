@@ -1,5 +1,12 @@
 # Model Serving Reference
 
+## Contents
+
+- FastAPI Model Server
+- Dockerfile
+- Common Pitfalls
+
+
 **ASK the user** about their serving requirements (single request vs batch, GPU vs CPU, authentication needs) before designing the API.
 
 ## FastAPI Model Server

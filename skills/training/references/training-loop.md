@@ -1,5 +1,15 @@
 # Training Loop Reference
 
+## Contents
+
+- Standard Training Loop
+- Early Stopping
+- LR Scheduling
+- Checkpoint Management
+- Complete Training Function
+- Common Pitfalls
+
+
 **ASK the user** which metric to monitor for early stopping and whether they want to minimize (loss) or maximize (AUC, accuracy) it.
 
 ## Standard Training Loop

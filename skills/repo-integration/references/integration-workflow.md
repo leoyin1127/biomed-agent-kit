@@ -1,5 +1,13 @@
 # Integration Workflow
 
+## Contents
+
+- Step 1: Evaluate the Repo
+- Step 2: Choose Install Strategy
+- Step 3: Dependency Conflict Resolution
+- Step 4: Test the Integration
+- Common Pitfalls
+
 ## Step 1: Evaluate the Repo
 
 Before writing any code, check these in order. Stop early if a blocker is found.
@@ -171,14 +179,18 @@ VIRTUAL_ENV=/path/to/external_venv uv pip install -r /path/to/external_repo/requ
 Before using the integration in experiments, verify it works:
 
 ```python
+import torch
+
+
 def test_external_model_loads():
     """Verify model loads and produces expected output shape."""
-    from <pkg>.vendor.REPO_adapter import ExternalModel
+    from your_pkg.vendor.repo_adapter import ExternalModel
 
     model = ExternalModel(weights_path="path/to/weights.pth")
     dummy_input = torch.randn(1, 3, 224, 224)
     output = model(dummy_input)
-    assert output.shape == (1, NUM_FEATURES), f"Unexpected shape: {output.shape}"
+    expected_features = 512  # replace with your adapter's true output size
+    assert output.shape == (1, expected_features), f"Unexpected shape: {output.shape}"
 
 
 def test_external_model_deterministic():

@@ -1,5 +1,14 @@
 # Biomedical Language Models Reference
 
+## Contents
+
+- Model Comparison
+- Loading Models from HuggingFace
+- Extracting Embeddings
+- Sentence Similarity
+- Common Pitfalls
+
+
 **ASK the user** what type of biomedical text they're working with -- PubMedBERT is best for literature, ClinicalBERT for clinical notes, BioBERT for general biomedical text.
 
 ## Model Comparison

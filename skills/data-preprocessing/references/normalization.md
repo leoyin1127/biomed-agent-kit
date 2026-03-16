@@ -1,5 +1,14 @@
 # Normalization Reference
 
+## Contents
+
+- CT Windowing
+- MRI Z-Score Normalization
+- Histopathology Stain Normalization
+- Generic Intensity Normalization
+- Common Pitfalls
+
+
 **ASK the user** about their imaging modality and clinical task -- CT windowing parameters depend on the anatomy of interest.
 
 ## CT Windowing

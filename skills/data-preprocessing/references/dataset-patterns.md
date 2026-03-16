@@ -1,5 +1,15 @@
 # Dataset Patterns Reference
 
+## Contents
+
+- Basic Medical Imaging Dataset
+- Cached Dataset (In-Memory)
+- HDF5-Backed Dataset
+- Patch-Based WSI Dataset
+- Tabular Clinical Data Dataset
+- Common Pitfalls
+
+
 **ASK the user** about their dataset size and available RAM before recommending a caching strategy.
 
 ## Basic Medical Imaging Dataset
